@@ -45,7 +45,7 @@ SELECT
 
 9) select * from videogames where YEAR(release_date)=2020;
 
-10) select videogame_id from reviews where rating
+10) select videogame_id from reviews where rating=4;
 
 11) select count(id) ,avg(rating)  from reviews where videogame_id=412;
 
