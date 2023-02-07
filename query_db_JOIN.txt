@@ -80,3 +80,11 @@ BONUS
 	group by videogame_id 
 	order by n_recensioni desc 
 	limit 1
+
+12)select software_houses.*, count(award_videogame.id ) as premi_vinti
+from software_houses
+join videogames on videogames.software_house_id = software_houses.id
+join award_videogame on award_videogame.videogame_id = videogames.id
+where award_videogame.year between 2015 and 2016
+group by software_houses.id
+order by premi_vinti desc limit 1
