@@ -1,0 +1,70 @@
+JOIN
+
+1- Selezionare i dati di tutti giocatori che hanno scritto almeno una recensione, mostrandoli una sola volta (996)
+
+2- Sezionare tutti i videogame dei tornei tenuti nel 2016, mostrandoli una sola volta (226)
+
+3- Mostrare le categorie di ogni videogioco (1718)
+
+4- Selezionare i dati di tutte le software house che hanno rilasciato almeno un gioco dopo il 2020, mostrandoli una sola volta (6)
+
+5- Selezionare i premi ricevuti da ogni software house per i videogiochi che ha prodotto (55)
+
+6- Selezionare categorie e classificazioni PEGI dei videogiochi che hanno ricevuto recensioni da 4 e 5 stelle, mostrandole una sola volta (3363)
+
+7- Selezionare quali giochi erano presenti nei tornei nei quali hanno partecipato i giocatori il cui nome inizia per 'S' (474)
+
+8- Selezionare le città in cui è stato giocato il gioco dell'anno del 2018 (36)
+
+9- Selezionare i giocatori che hanno giocato al gioco più atteso del 2018 in un torneo del 2019 (3306)
+
+
+*********** BONUS ***********
+
+10- Selezionare i dati della prima software house che ha rilasciato un gioco, assieme ai dati del gioco stesso (software house id : 5)
+
+11- Selezionare i dati del videogame (id, name, release_date, totale recensioni) con più recensioni (videogame id : potrebbe uscire 449 o 398, sono entrambi a 20)
+
+12- Selezionare la software house che ha vinto più premi tra il 2015 e il 2016 (software house id : potrebbe uscire 3 o 1, sono entrambi a 3)
+
+13- Selezionare le categorie dei videogame i quali hanno una media recensioni inferiore a 1.5 (10)
+
+
+1) select players.* from players join reviews on reviews.player_id = players.id group by id;
+
+2) select videogames.id from videogames join tournament_videogame on tournament_videogame.videogame_id = videogames.id join tournaments on tournaments.id = tournament_videogame.tournament_id where tournaments.year = 2016 group by videogames.id;
+
+3) select categories.id , categories.name as categoria , videogames.name as videogioco from categories join category_videogame on category_videogame.category_id = categories.id join videogames on videogames.id = category_videogame.videogame_id;
+
+4) select software_houses.* from software_houses join videogames on videogames.software_house_id = software_houses.id where Year(release_date)>=2020 group by software_houses.id;
+
+5) select software_houses.name as casa_vincitrice ,  awards.name as premio , videogames.name as videogioco, award_videogame.year as anno from software_houses join videogames on videogames.software_house_id = software_houses.id join award_videogame on award_videogame.videogame_id = videogames.id
+join awards  on awards.id = award_videogame.award_id order by award_videogame.year
+
+6) select distinct categories.name as categoria , pegi_labels.name as PEGI , videogames.name as videogioco from videogames join category_videogame on category_videogame.videogame_id = videogames.id join categories on categories.id = category_videogame.category_id join pegi_label_videogame on pegi_label_videogame.videogame_id = videogames.id join pegi_labels
+ on pegi_labels.id = pegi_label_videogame.pegi_label_id join reviews on reviews.videogame_id = videogames.id where reviews.rating >= 4; 
+
+7)select DISTINCT videogames.name as videogioco, 
+ from videogames
+ join tournament_videogame on videogames.id = tournament_videogame.videogame_id
+ join tournaments  on tournaments.id = tournament_videogame.tournament_id
+ join player_tournament  on player_tournament.tournament_id =tournaments.id
+ join players  on players.id =player_tournament.player_id
+ where players.name like "S%";
+
+8)select tournaments.city from tournaments 
+join tournament_videogame on tournaments.id = tournament_videogame.tournament_id 
+join videogames on videogames.id = tournament_videogame.videogame_id
+join award_videogame on award_videogame.videogame_id =videogames.id 
+join awards on awards.id =award_videogame.award_id 
+where awards.name like "%anno" and award_videogame.year = 2018;
+
+9)select players.name from players
+join player_tournament on player_tournament.player_id = players.id
+  join tournaments on tournaments.id = player_tournament.tournament_id
+  join tournament_videogame on tournament_videogame.tournament_id = tournaments.id
+  join videogames on videogames.id = tournament_videogame.videogame_id
+  join award_videogame  on award_videogame.videogame_id = videogames.id 
+  join awards on awards.id = award_videogame.award_id
+  where  awards.name LIKE "Gioco più atteso" AND award_videogame.year = 2018  AND tournaments.year = 2019;
+           
