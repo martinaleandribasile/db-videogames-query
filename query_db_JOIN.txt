@@ -73,3 +73,10 @@ BONUS
 10) select software_houses.*, videogames.* from videogames
     join software_houses on software_houses.id = videogames.software_house_id
     where videogames.release_date = ( SELECT MIN(videogames.release_date) FROM videogames );
+
+11)select videogames.* , count(reviews.id) as n_recensioni
+  from videogames 
+  join reviews on reviews.videogame_id = videogames.id
+	group by videogame_id 
+	order by n_recensioni desc 
+	limit 1
