@@ -67,4 +67,9 @@ join player_tournament on player_tournament.player_id = players.id
   join award_videogame  on award_videogame.videogame_id = videogames.id 
   join awards on awards.id = award_videogame.award_id
   where  awards.name LIKE "Gioco più atteso" AND award_videogame.year = 2018  AND tournaments.year = 2019;
-           
+      
+BONUS 
+
+10) select software_houses.*, videogames.* from videogames
+    join software_houses on software_houses.id = videogames.software_house_id
+    where videogames.release_date = ( SELECT MIN(videogames.release_date) FROM videogames );
